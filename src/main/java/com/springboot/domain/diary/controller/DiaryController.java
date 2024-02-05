@@ -1,5 +1,6 @@
 package com.springboot.domain.diary.controller;
 
+import com.springboot.domain.diary.dto.DiaryListResponseDto;
 import com.springboot.domain.diary.dto.DiaryRequestDto;
 import com.springboot.domain.diary.dto.DiaryResponseDto;
 import com.springboot.domain.diary.entity.Diary;
@@ -21,25 +22,25 @@ public class DiaryController {
     public long save(@RequestBody DiaryRequestDto requestDto) {
         return diaryService.save(requestDto);
     }
-    @GetMapping("/{diary_id}")
-    public DiaryResponseDto findById(@PathVariable Long diary_id) {
-        return diaryService.findById(diary_id);
+    @GetMapping("/{diaryId}")
+    public DiaryResponseDto findById(@PathVariable Long diaryId) {
+        return diaryService.findById(diaryId);
     }
 
 //    @PutMapping("/{diary_id}")
 //    public DiaryResponseDto update(@RequestBody DiaryRequestDto requestDto) {
 //        return diaryService.update();
 //    }
-    @DeleteMapping("/{diary_id}")
-    public void delete(@PathVariable Long diary_id) {
-        diaryService.delete(diary_id);
+    @DeleteMapping("/{diaryId}")
+    public void delete(@PathVariable Long diaryId) {
+        diaryService.delete(diaryId);
     }
-    @GetMapping("/my")
-    public List<DiaryResponseDto> findByMember(@PathVariable Long member_id) {
-        return diaryService.findByMember(member_id);
+    @GetMapping("/my/{memberId}")
+    public List<DiaryListResponseDto> findByMember(@PathVariable Long memberId) {
+        return diaryService.findByMember(memberId);
     }
-    @GetMapping("/my")
-    public List<DiaryResponseDto> findAll() {
+    @GetMapping("/all")
+    public List<DiaryListResponseDto> findAll() {
         return diaryService.findAll();
     }
 

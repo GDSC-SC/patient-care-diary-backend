@@ -1,5 +1,6 @@
 package com.springboot.domain.diary.service;
 
+import com.springboot.domain.diary.dto.DiaryListResponseDto;
 import com.springboot.domain.diary.dto.DiaryRequestDto;
 import com.springboot.domain.diary.dto.DiaryResponseDto;
 import com.springboot.domain.diary.entity.Diary;
@@ -28,11 +29,7 @@ public class DiaryService {
                 .member(member)
                 .date(requestDto.getDate())
                 .build();
-//        SessionUser user = (SessionUser)httpSession.getAttribute("user");
-//        Member member = memberRepository.findByEmail(user.getEmail())
-//                .orElseThrow(() -> new IllegalArgumentException("해당 email을 가진 member가 없습니다. id=" + user.getEmail()));
-//        posts.setMember(member);
-
+        System.out.println("hi");
         return diaryRepository.save(diary).getId();
     }
 
@@ -50,18 +47,18 @@ public class DiaryService {
         diaryRepository.delete(diary);
     }
 
-    public List<DiaryResponseDto> findByMember(Long member_id) {
+    public List<DiaryListResponseDto> findByMember(Long member_id) {
         Member member = memberRepository.findById(member_id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + member_id));;
         List<Diary> diaries = diaryRepository.findByMember(member);
         return diaries.stream()
-                .map(DiaryResponseDto::new)
+                .map(DiaryListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<DiaryResponseDto> findAll() {
+    public List<DiaryListResponseDto> findAll() {
         return diaryRepository.findAll().stream()
-                .map(DiaryResponseDto::new)
+                .map(DiaryListResponseDto::new)
                 .collect(Collectors.toList());
     }
 }

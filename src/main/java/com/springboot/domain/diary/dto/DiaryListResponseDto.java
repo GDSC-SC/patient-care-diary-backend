@@ -13,14 +13,19 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class DiaryResponseDto {
+public class DiaryListResponseDto {
+
     private Long id;
     private String name;
     private LocalDate date;
+    //private List<Content> contents;
+    private List<DiaryEmojiResponseDto> diaryEmojis;
     @Builder
-    public DiaryResponseDto(Diary entity) {
+    public DiaryListResponseDto(Diary entity) {
         this.id = entity.getId();
         this.name = entity.getMember().getName();
         this.date = entity.getDate();
+        //this.contents = entity.getContents();
+        this.diaryEmojis = entity.getDiaryEmojis().stream().map(DiaryEmojiResponseDto::new).collect(Collectors.toList());
     }
 }
