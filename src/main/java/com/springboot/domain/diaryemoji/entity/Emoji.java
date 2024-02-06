@@ -7,10 +7,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum Emoji {
 
-    GOOD("😊", "좋아요."),
-    LOVE("❤️", "사랑해요."),
-    CHECK("✔️", "확인했어요.");
+    GOOD("E001"),
+    LOVE("E002"),
+    CHECK("E003");
 
-    private final String symbol;
-    private final String description;
+    private final String code;
+    public static Emoji findByCode(String code) {
+        for (Emoji emoji : values()) {
+            if (emoji.code.equals(code)) {
+                return emoji;
+            }
+        }
+        return null;
+    }
 }

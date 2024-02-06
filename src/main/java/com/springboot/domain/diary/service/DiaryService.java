@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 public class DiaryService {
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
+
     public long save(DiaryRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMember_id())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + requestDto.getMember_id()));;
+        Member member = memberRepository.findById(requestDto.getMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + requestDto.getMemberId()));
 
         Diary diary = Diary.builder()
                 .member(member)
                 .date(requestDto.getDate())
                 .build();
-        System.out.println("hi");
         return diaryRepository.save(diary).getId();
     }
 
@@ -37,9 +37,6 @@ public class DiaryService {
         Diary entity = diaryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 다이어리가 없습니다. id="+ id));
         return new DiaryResponseDto(entity);
     }
-
-//    public DiaryResponseDto update() {
-//    }
 
     public void delete(Long id) {
         Diary diary = diaryRepository.findById(id)

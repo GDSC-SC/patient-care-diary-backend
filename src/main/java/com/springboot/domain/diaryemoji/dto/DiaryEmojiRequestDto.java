@@ -8,13 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DiaryEmojiResponseDto {
-
-    private Emoji emoji;
-
-    private int count;
-    @Builder
-    public DiaryEmojiResponseDto(DiaryEmoji entity) {
-        this.emoji = entity.getEmoji();
-    }
+public class DiaryEmojiRequestDto {
+    private String emojiCode;
+    private Long memberId;
+    private Long diaryId;
 }

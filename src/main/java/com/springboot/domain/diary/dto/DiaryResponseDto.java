@@ -17,6 +17,7 @@ public class DiaryResponseDto {
     private Long id;
     private String name;
     private LocalDate date;
+    private List<DiaryEmojiResponseDto> diaryEmojis;
     @Builder
     public DiaryResponseDto(Diary entity) {
         this.id = entity.getId();
