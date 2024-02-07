@@ -6,6 +6,7 @@ import com.springboot.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,8 +19,8 @@ public class DiaryListResponseDto {
     private Long id;
     private String name;
     private LocalDate date;
+    @Setter
     private List<DiaryEmojiResponseDto> diaryEmojis;
-
     //컨텐츠에서 카테고리만 보여주는 방향 (?)
     @Builder
     public DiaryListResponseDto(Diary entity) {
@@ -27,4 +28,5 @@ public class DiaryListResponseDto {
         this.name = entity.getMember().getName();
         this.date = entity.getDate();
     }
+
 }

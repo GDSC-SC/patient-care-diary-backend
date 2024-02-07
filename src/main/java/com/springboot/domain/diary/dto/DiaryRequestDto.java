@@ -11,5 +11,4 @@ import java.time.LocalDate;
 public class DiaryRequestDto {
     private long memberId;
     private LocalDate date;
-
 }

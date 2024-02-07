@@ -6,6 +6,7 @@ import com.springboot.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +18,14 @@ public class DiaryResponseDto {
     private Long id;
     private String name;
     private LocalDate date;
+    @Setter
     private List<DiaryEmojiResponseDto> diaryEmojis;
+    //컨텐츠를 다 보여주는 방향
     @Builder
     public DiaryResponseDto(Diary entity) {
         this.id = entity.getId();
         this.name = entity.getMember().getName();
         this.date = entity.getDate();
     }
+
 }

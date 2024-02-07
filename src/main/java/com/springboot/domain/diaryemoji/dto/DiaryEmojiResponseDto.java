@@ -14,7 +14,8 @@ public class DiaryEmojiResponseDto {
 
     private int count;
     @Builder
-    public DiaryEmojiResponseDto(DiaryEmoji entity) {
-        this.emoji = entity.getEmoji();
+    public DiaryEmojiResponseDto(Emoji emoji, int count) {
+        this.emoji = emoji;
+        this.count = count;
     }
 }
