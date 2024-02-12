@@ -1,9 +1,11 @@
-package com.springboot.security.dto;
+package com.springboot.security.oauth.dto;
 
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.Role;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -43,7 +45,16 @@ public class OAuthAttributes {
                 .name(name)
                 .email(email)
                 .picture(picture)
-                .role(Role.USER)
+                .role(Role.GUEST)
                 .build();
+    }
+
+    public Map<String, Object> convertToMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", nameAttributeKey);
+        map.put("key", nameAttributeKey);
+        map.put("email", email);
+
+        return map;
     }
 }

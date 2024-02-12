@@ -24,10 +24,14 @@ public class Member {
     @Column(nullable = false)
     private String email;
 
+    @Column
     private String picture;
 
     @Column(nullable = false)
     private Role role;
+
+    @Column
+    private String refreshToken;
 
     @Column
     private String gender;
@@ -57,5 +61,13 @@ public class Member {
 
     public String getRoleKey(){
         return this.role.getKey();
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
+    }
+
+    public void authorizeUser() {
+        this.role = Role.USER;
     }
 }

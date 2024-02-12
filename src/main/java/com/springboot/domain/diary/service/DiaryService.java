@@ -12,10 +12,8 @@ import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.global.error.ErrorCode;
 import com.springboot.global.exception.EntityNotFoundException;
-import com.springboot.security.dto.SessionUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,6 +78,7 @@ public class DiaryService {
 
         for (DiaryEmoji diaryEmoji : diaryEmojis) {
             Emoji emoji = diaryEmoji.getEmoji();
+            System.out.println(emoji);
             emojiCountMap.put(emoji, emojiCountMap.getOrDefault(emoji, 0) + 1);
         }
 

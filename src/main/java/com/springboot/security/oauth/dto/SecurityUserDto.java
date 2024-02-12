@@ -1,19 +1,24 @@
-package com.springboot.security.dto;
+package com.springboot.security.oauth.dto;
 
 import com.springboot.domain.member.entity.Member;
+import com.springboot.domain.member.entity.Role;
+import lombok.Builder;
 import lombok.Getter;
 
-import java.io.Serializable;
-
 @Getter
-public class SessionUser implements Serializable {
+public class SecurityUserDto {
     private String name;
     private String email;
     private String picture;
 
-    public SessionUser(Member member) {
+    private Role role;
+
+    @Builder
+    public SecurityUserDto(Member member) {
         this.name = member.getName();
         this.email = member.getEmail();
         this.picture = member.getPicture();
+        this.role = member.getRole();
     }
+
 }
