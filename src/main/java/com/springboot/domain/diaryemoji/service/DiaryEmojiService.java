@@ -12,9 +12,11 @@ import com.springboot.global.error.ErrorCode;
 import com.springboot.global.exception.DuplicateRequestException;
 import com.springboot.global.exception.EntityNotFoundException;
 import com.springboot.global.exception.InvalidInputException;
+import com.springboot.security.oauth.dto.SecurityUserDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.NotFound;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -30,8 +32,12 @@ public class DiaryEmojiService {
 
     @Transactional
     public long save(DiaryEmojiRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"해당 유저가 없습니다. id=" + requestDto.getMemberId()));
+
+        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDto.getEmail();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
+
         Diary diary = diaryRepository.findById(requestDto.getDiaryId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + requestDto.getDiaryId()));
 
@@ -52,15 +58,18 @@ public class DiaryEmojiService {
         return diaryEmojiRepository.save(diaryEmoji).getId();
     }
     @Transactional
-    public void delete(Long memberId, Long diaryId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"해당 유저가 없습니다. id=" + memberId));
+    public void delete(Long diaryId) {
+
+        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDto.getEmail();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
 
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + diaryId));
 
         DiaryEmoji diaryEmoji = diaryEmojiRepository.findByMemberAndDiary(member, diary)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EMOJI_NOT_FOUND, "사용자 id " + memberId + "가 해당 다이어리 " + diaryId + "에 누른 이모지가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EMOJI_NOT_FOUND, "사용자 email " + email + "가 해당 다이어리 " + diaryId + "에 누른 이모지가 없습니다."));
         diaryEmojiRepository.delete(diaryEmoji);
     }
 }

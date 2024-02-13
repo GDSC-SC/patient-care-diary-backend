@@ -30,9 +30,9 @@ public class DiaryController {
     public void delete(@PathVariable Long diaryId) {
         diaryService.delete(diaryId);
     }
-    @GetMapping("/my/{memberId}")
-    public List<DiaryListResponseDto> findByMember(@PathVariable Long memberId) {
-        return diaryService.findByMember(memberId);
+    @GetMapping("/my")
+    public List<DiaryListResponseDto> findMyDiary() {
+        return diaryService.findMyDiary();
     }
     @GetMapping("/all")
     public List<DiaryListResponseDto> findAll() {

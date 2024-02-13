@@ -9,6 +9,5 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class DiaryRequestDto {
-    private long memberId;
     private LocalDate date;
 }

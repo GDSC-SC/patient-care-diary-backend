@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DiaryEmojiRequestDto {
     private String emojiCode;
-    private Long memberId;
     private Long diaryId;
 }

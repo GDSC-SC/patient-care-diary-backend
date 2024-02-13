@@ -130,8 +130,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         Authentication authentication = getAuthentication(userDto);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-//        SecurityUserDto userDto2 = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        log.info(userDto.getEmail());
     }
 
     public Authentication getAuthentication(SecurityUserDto member) {

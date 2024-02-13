@@ -12,7 +12,9 @@ import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.global.error.ErrorCode;
 import com.springboot.global.exception.EntityNotFoundException;
+import com.springboot.security.oauth.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -25,8 +27,10 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
 
     public long save(DiaryRequestDto requestDto) {
-        Member member = memberRepository.findById(requestDto.getMemberId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"해당 유저가 없습니다. id=" + requestDto.getMemberId()));
+        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDto.getEmail();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
 
         Diary diary = Diary.builder()
                 .member(member)
@@ -49,9 +53,11 @@ public class DiaryService {
         diaryRepository.delete(diary);
     }
 
-    public List<DiaryListResponseDto> findByMember(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"해당 유저가 없습니다. id=" + memberId));
+    public List<DiaryListResponseDto> findMyDiary() {
+        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDto.getEmail();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
         List<Diary> diaries = diaryRepository.findByMember(member);
         return diaries.stream()
                 .map(diary -> {
