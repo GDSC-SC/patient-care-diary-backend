@@ -11,12 +11,14 @@ import com.springboot.domain.diaryemoji.entity.Emoji;
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.global.error.ErrorCode;
+import com.springboot.global.exception.DuplicateRequestException;
 import com.springboot.global.exception.EntityNotFoundException;
 import com.springboot.security.jwt.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,9 +34,14 @@ public class DiaryService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
 
+        LocalDate date = requestDto.getDate();
+
+        if (diaryRepository.findByMemberAndDate(member, date).isPresent()){
+            throw new DuplicateRequestException(ErrorCode.DIARY_DUPLICATE_REQUEST, "유저="+ email + "의 date=" +date + "다이어리는 이미 생성되었습니다.");
+        }
         Diary diary = Diary.builder()
                 .member(member)
-                .date(requestDto.getDate())
+                .date(date)
                 .build();
         return diaryRepository.save(diary).getId();
     }
