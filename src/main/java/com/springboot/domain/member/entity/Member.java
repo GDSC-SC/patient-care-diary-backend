@@ -1,5 +1,6 @@
 package com.springboot.domain.member.entity;
 
+import com.springboot.domain.category.entity.Category;
 import com.springboot.domain.diary.entity.Diary;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -44,6 +45,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Diary> diaries = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Category> categories = new ArrayList<>();
 
     @Builder
     public Member(String name, String email, String picture, Role role) {
