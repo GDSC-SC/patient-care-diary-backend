@@ -1,4 +1,4 @@
-package com.springboot.security.oauth.dto;
+package com.springboot.security.jwt.dto;
 
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.Role;

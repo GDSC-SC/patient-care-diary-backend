@@ -12,7 +12,7 @@ import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.global.error.ErrorCode;
 import com.springboot.global.exception.EntityNotFoundException;
-import com.springboot.security.oauth.dto.SecurityUserDto;
+import com.springboot.security.jwt.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

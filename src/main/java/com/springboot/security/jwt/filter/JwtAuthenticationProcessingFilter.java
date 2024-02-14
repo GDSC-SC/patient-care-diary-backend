@@ -3,7 +3,7 @@ package com.springboot.security.jwt.filter;
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.security.jwt.service.JwtService;
-import com.springboot.security.oauth.dto.SecurityUserDto;
+import com.springboot.security.jwt.dto.SecurityUserDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

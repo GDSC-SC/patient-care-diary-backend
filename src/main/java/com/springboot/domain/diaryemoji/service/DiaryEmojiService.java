@@ -12,15 +12,11 @@ import com.springboot.global.error.ErrorCode;
 import com.springboot.global.exception.DuplicateRequestException;
 import com.springboot.global.exception.EntityNotFoundException;
 import com.springboot.global.exception.InvalidInputException;
-import com.springboot.security.oauth.dto.SecurityUserDto;
+import com.springboot.security.jwt.dto.SecurityUserDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.NotFound;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.webjars.NotFoundException;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
