@@ -24,9 +24,12 @@ public enum ErrorCode {
 
     //카테고리
     CATEGORY_NOT_FOUND(404, "T001", "해당 카테고리를 찾을 수 없습니다."),
+    CATEGORY_CODE_NOT_FOUND(400, "T002", "해당 카테고리 코드가 존재하지 않습니다."),
 
     //콘텐츠
-    CONTENT_NOT_FOUND(404, "C001", "해당 콘텐츠를 찾을 수 없습니다.");
+    CONTENT_NOT_FOUND(404, "C001", "해당 콘텐츠를 찾을 수 없습니다."),
+    CONTENT_DUPLICATE_REQUEST(409, "C002", "중복된 콘텐츠 요청입니다.");
+
 
     private final int status;
     private final String code;
