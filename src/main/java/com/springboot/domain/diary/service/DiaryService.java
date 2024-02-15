@@ -1,5 +1,6 @@
 package com.springboot.domain.diary.service;
 
+import com.springboot.domain.content.entity.ContentRepository;
 import com.springboot.domain.diary.dto.DiaryListResponseDto;
 import com.springboot.domain.diary.dto.DiaryRequestDto;
 import com.springboot.domain.diary.dto.DiaryResponseDto;
@@ -7,6 +8,7 @@ import com.springboot.domain.diary.entity.Diary;
 import com.springboot.domain.diary.entity.DiaryRepository;
 import com.springboot.domain.diaryemoji.dto.DiaryEmojiResponseDto;
 import com.springboot.domain.diaryemoji.entity.DiaryEmoji;
+import com.springboot.domain.diaryemoji.entity.DiaryEmojiRepository;
 import com.springboot.domain.diaryemoji.entity.Emoji;
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 public class DiaryService {
     private final MemberRepository memberRepository;
     private final DiaryRepository diaryRepository;
+    private final ContentRepository contentRepository;
+    private final DiaryEmojiRepository diaryEmojiRepository;
 
     public long save(DiaryRequestDto requestDto) {
         SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -47,16 +51,18 @@ public class DiaryService {
     }
 
     public DiaryResponseDto findById(Long id) {
-        Diary entity = diaryRepository.findById(id)
+        Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + id));
-        DiaryResponseDto responseDto = new DiaryResponseDto(entity);
-        responseDto.setDiaryEmojis(countEmoji(entity));
+        DiaryResponseDto responseDto = new DiaryResponseDto(diary);
+        responseDto.setDiaryEmojis(countEmoji(diary));
         return responseDto;
     }
 
     public void delete(Long id) {
         Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + id));
+        contentRepository.deleteAll(diary.getContents());
+        diaryEmojiRepository.deleteAll(diary.getDiaryEmojis());
         diaryRepository.delete(diary);
     }
 

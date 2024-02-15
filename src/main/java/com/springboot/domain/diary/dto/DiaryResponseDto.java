@@ -1,5 +1,6 @@
 package com.springboot.domain.diary.dto;
 
+import com.springboot.domain.content.dto.ContentResponseDto;
 import com.springboot.domain.diary.entity.Diary;
 import com.springboot.domain.diaryemoji.dto.DiaryEmojiResponseDto;
 import com.springboot.domain.member.entity.Member;
@@ -20,12 +21,17 @@ public class DiaryResponseDto {
     private LocalDate date;
     @Setter
     private List<DiaryEmojiResponseDto> diaryEmojis;
+
     //컨텐츠를 다 보여주는 방향
+    private List<ContentResponseDto> contents;
     @Builder
     public DiaryResponseDto(Diary entity) {
         this.id = entity.getId();
         this.name = entity.getMember().getName();
         this.date = entity.getDate();
+        this.contents = entity.getContents().stream()
+                .map(ContentResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 }
