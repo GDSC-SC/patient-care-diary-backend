@@ -2,6 +2,7 @@ package com.springboot.domain.content.controller;
 
 import com.springboot.domain.content.dto.ContentRequestDto;
 import com.springboot.domain.content.dto.ContentResponseDto;
+import com.springboot.domain.content.dto.ContentUpdateRequestDto;
 import com.springboot.domain.content.service.ContentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +25,8 @@ public class ContentController {
         return contentService.findById(contentId);
     }
     @PostMapping("/{contentId}")
-    public long update(@PathVariable Long contentId) {
-        return contentService.update(contentId);
+    public long update(@RequestBody ContentUpdateRequestDto requestDto, @PathVariable Long contentId) {
+        return contentService.update(requestDto, contentId);
     }
     @DeleteMapping("/{contentId}")
     public void delete(@PathVariable Long contentId) {

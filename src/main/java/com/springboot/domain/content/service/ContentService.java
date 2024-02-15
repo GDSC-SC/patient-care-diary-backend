@@ -4,13 +4,16 @@ import com.springboot.domain.category.entity.Category;
 import com.springboot.domain.category.entity.CategoryRepository;
 import com.springboot.domain.content.dto.ContentRequestDto;
 import com.springboot.domain.content.dto.ContentResponseDto;
+import com.springboot.domain.content.dto.ContentUpdateRequestDto;
 import com.springboot.domain.content.entity.Content;
 import com.springboot.domain.content.entity.ContentRepository;
 import com.springboot.domain.diary.dto.DiaryResponseDto;
 import com.springboot.domain.diary.entity.Diary;
 import com.springboot.domain.diary.entity.DiaryRepository;
 import com.springboot.global.error.ErrorCode;
+import com.springboot.global.exception.DuplicateRequestException;
 import com.springboot.global.exception.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +26,17 @@ public class ContentService {
     private final ContentRepository contentRepository;
     private final DiaryRepository diaryRepository;
     private final CategoryRepository categoryRepository;
+    @Transactional
     public long save(ContentRequestDto requestDto) {
         Diary diary = diaryRepository.findById(requestDto.getDiaryId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + requestDto.getDiaryId()));
+
         Category category = categoryRepository.findById(requestDto.getCategoryId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CATEGORY_NOT_FOUND, "해당 카테고리가 없습니다. id=" + requestDto.getCategoryId()));
+
+        if (contentRepository.findContentByDiaryAndCategory(diary, category).isPresent()){
+            throw new DuplicateRequestException(ErrorCode.CONTENT_DUPLICATE_REQUEST, "해당 다이어리 id=" + requestDto.getDiaryId() + " 해당 카테고리 id=" + requestDto.getCategoryId() + "의 콘텐츠는 중복된 요청입니다.");
+        }
         Content content = Content.builder()
                 .diary(diary)
                 .category(category)
@@ -37,36 +46,32 @@ public class ContentService {
                 .build();
         return contentRepository.save(content).getId();
     }
-
     public ContentResponseDto findById(Long id) {
-        Content entity = contentRepository.findById(id)
+        Content content = contentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTENT_NOT_FOUND, "해당 컨텐츠가 없습니다. id=" + id));
-        ContentResponseDto responseDto = new ContentResponseDto(entity);
-        return responseDto;
+        return new ContentResponseDto(content);
     }
-
-    //구현해야함
-    public long update(Long id) {
-        Content entity = contentRepository.findById(id)
+    @Transactional
+    public long update(ContentUpdateRequestDto requestDto, Long id) {
+        Content content = contentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTENT_NOT_FOUND, "해당 컨텐츠가 없습니다. id=" + id));
+        content.update(requestDto.getDone(), requestDto.getPhotoUrl(), requestDto.getText());
         return id;
     }
 
+    @Transactional
     public void delete(Long id) {
         Content content = contentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTENT_NOT_FOUND, "해당 컨텐츠가 없습니다. id=" + id));
         contentRepository.delete(content);
     }
 
+    //content response dto category 수정해야할수도
     public List<ContentResponseDto> findByDiary(Long diaryId) {
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + diaryId));
-        List<Content> contents = diary.getContents();
-        return contents.stream()
-                .map(content -> {
-                    ContentResponseDto responseDto = new ContentResponseDto(content);
-                    return responseDto;
-                })
+        return diary.getContents().stream()
+                .map(ContentResponseDto::new)
                 .collect(Collectors.toList());
     }
 }

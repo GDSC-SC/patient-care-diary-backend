@@ -45,4 +45,10 @@ public class Content {
         this.text = text;
     }
 
+    public void update(Boolean done, String photoUrl, String text) {
+        this.done = done;
+        this.photoUrl = photoUrl;
+        this.text = text;
+    }
+
 }
