@@ -30,7 +30,7 @@ public class Category {
     private CategoryCode categoryCode;
 
     @Column(nullable = false)
-    private String subtitle;
+    private String midCategory;
 
     @Column(nullable = false)
     private String color;
@@ -43,17 +43,17 @@ public class Category {
     List<Content> contents = new ArrayList<>();
 
     @Builder
-    public Category(Member member, CategoryCode categoryCode, String subtitle, String color){
+    public Category(Member member, CategoryCode categoryCode, String midCategory, String color){
         this.member = member;
         this.categoryCode = categoryCode;
-        this.subtitle = subtitle;
+        this.midCategory = midCategory;
         this.color = color;
         this.visible = true;
     }
 
-    public void update(CategoryCode categoryCode, String subtitle, String color){
+    public void update(CategoryCode categoryCode, String midCategory, String color){
         this.categoryCode = categoryCode;
-        this.subtitle = subtitle;
+        this.midCategory = midCategory;
         this.color = color;
     }
 

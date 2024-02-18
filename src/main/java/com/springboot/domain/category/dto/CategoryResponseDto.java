@@ -10,16 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryResponseDto {
     private long id;
-    private CategoryCode category;
-    private String subtitle;
+
+    private String categoryCode;
+    private String category;
+    private String midCategory;
     private String color;
     private Boolean visible;
 
     @Builder
     public CategoryResponseDto(Category entity) {
         this.id = entity.getId();
-        this.category = entity.getCategoryCode();
-        this.subtitle = entity.getSubtitle();
+        this.categoryCode = entity.getCategoryCode().getCode();
+        this.category = entity.getCategoryCode().getEngName();
+        this.midCategory = entity.getMidCategory();
         this.color = entity.getColor();
         this.visible = entity.getVisible();
     }

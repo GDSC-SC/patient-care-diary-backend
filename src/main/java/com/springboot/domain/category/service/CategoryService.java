@@ -43,7 +43,7 @@ public class CategoryService {
         Category category = Category.builder()
                 .member(member)
                 .categoryCode(categoryCode)
-                .subtitle(requestDto.getSubtitle())
+                .midCategory(requestDto.getSubtitle())
                 .color(requestDto.getColor())
                 .build();
         return categoryRepository.save(category).getId();
