@@ -26,6 +26,10 @@ public class DiaryController {
     public DiaryResponseDto findById(@PathVariable Long diaryId) {
         return diaryService.findById(diaryId);
     }
+    @GetMapping("/date/{date}")
+    public DiaryResponseDto findById(@PathVariable String date) {
+        return diaryService.findByMemberAndDate(date);
+    }
     @DeleteMapping("/{diaryId}")
     public void delete(@PathVariable Long diaryId) {
         diaryService.delete(diaryId);
@@ -38,7 +42,5 @@ public class DiaryController {
     public List<DiaryListResponseDto> findAll() {
         return diaryService.findAll();
     }
-    
-    //다이어리 업데이트 보류
 
 }

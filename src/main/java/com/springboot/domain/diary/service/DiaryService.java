@@ -21,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -112,5 +113,21 @@ public class DiaryService {
             responseDtoList.add(responseDto);
         }
         return responseDtoList;
+    }
+
+    public DiaryResponseDto findByMemberAndDate(String dateString) {
+        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDto.getEmail();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+
+        Diary diary = diaryRepository.findByMemberAndDate(member, date)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 멤버 email=" + email + " 의 해당 날짜=" + dateString +" 의 다이어리가 없습니다."));
+        DiaryResponseDto responseDto = new DiaryResponseDto(diary);
+        responseDto.setDiaryEmojis(countEmoji(diary));
+        return responseDto;
     }
 }
