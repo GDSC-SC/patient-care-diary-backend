@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class ContentResponseDto {
 
     private String category;
-    private String subtitle;
+    private String midCategory;
     private String color;
 
     private Boolean done;
@@ -24,7 +24,7 @@ public class ContentResponseDto {
     @Builder
     public ContentResponseDto(Content entity) {
         this.category = entity.getCategory().getCategoryCode().getKorName();
-        this.subtitle = entity.getCategory().getSubtitle();
+        this.midCategory = entity.getCategory().getMidCategory();
         this.color = entity.getCategory().getColor();
         this.done = entity.getDone();
         this.photoUrl = entity.getPhotoUrl();
