@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/emoji")
+@RequestMapping("/api/emoji")
 public class DiaryEmojiController {
 
     private final DiaryEmojiService diaryEmojiService;
