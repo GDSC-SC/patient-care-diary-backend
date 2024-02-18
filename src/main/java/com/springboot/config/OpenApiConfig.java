@@ -5,8 +5,11 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class OpenApiConfig {
@@ -26,13 +29,15 @@ public class OpenApiConfig {
         Components components = new Components()
                 .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
                         .name(jwtSchemeName)
-                        .type(SecurityScheme.Type.HTTP) // HTTP 방식
+                        .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                         .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
 
+        Server server = new Server().url("https://patient-care-diary.fly.dev");
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .components(components);
+                .components(components)
+                .servers(List.of(server));
     }
 }

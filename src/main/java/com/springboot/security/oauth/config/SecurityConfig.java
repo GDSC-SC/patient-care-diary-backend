@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .and()
                     .authorizeHttpRequests()
                     .requestMatchers("/","/css/**","/images/**","/js/**","/swagger-ui/**","/v3/api-docs/**",
-                            "/swagger*/**").permitAll()
+                            "/swagger*/**","/favicon.ico", "/login/oauth2/code/google").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(Role.USER.name())
                 .anyRequest().authenticated()
                 .and()
