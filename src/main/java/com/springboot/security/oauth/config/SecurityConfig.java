@@ -9,6 +9,7 @@ import com.springboot.security.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,6 +32,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors()
+                .and()
                 .httpBasic().disable() // httpBasic 사용 X
                 .csrf().disable() // csrf 보안 사용 X
                 .headers().frameOptions().disable()
@@ -38,9 +41,9 @@ public class SecurityConfig {
                 // 세션 사용하지 않으므로 STATELESS로 설정
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .authorizeHttpRequests()
+                    .authorizeHttpRequests()//
                     .requestMatchers("/","/css/**","/images/**","/js/**","/swagger-ui/**","/v3/api-docs/**",
-                            "/swagger*/**","/favicon.ico", "/login/oauth2/code/google").permitAll()
+                                "/swagger*/**","/favicon.ico", "/login/oauth2/code/google", "/auth/**", "/oauth2/**").permitAll()
                     .requestMatchers("/api/v1/**").hasRole(Role.USER.name())
                 .anyRequest().authenticated()
                 .and()

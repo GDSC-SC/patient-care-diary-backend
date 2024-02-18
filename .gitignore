@@ -43,3 +43,7 @@ bin/
 
 ### oauth ###
 src/main/resources/application-oauth.yml
+src/main/resources/application.yml
+
+###GCS###
+src/main/resources/patient-care-diary-5fe08c6658e1.json

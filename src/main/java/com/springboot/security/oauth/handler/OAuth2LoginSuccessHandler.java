@@ -4,6 +4,7 @@ package com.springboot.security.oauth.handler;
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.domain.member.entity.Role;
+import com.springboot.security.jwt.dto.TokenResponseDto;
 import com.springboot.security.jwt.service.JwtService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,16 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtService jwtService;
     private final MemberRepository memberRepository;
@@ -40,14 +43,17 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             if(!isExist) {
                 String accessToken = jwtService.createAccessToken(email);
                 response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-                response.sendRedirect("/login"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
+                //response.sendRedirect("http://localhost:3000/home"); // 프론트의 회원가입 추가 정보 입력 폼으로 리다이렉트
 
-                jwtService.sendAccessAndRefreshToken(response, accessToken, null);
+                //jwtService.sendAccessAndRefreshToken(response, accessToken, null);
                 Member member = memberRepository.findByEmail(email)
                                 .orElseThrow(() -> new IllegalArgumentException("이메일에 해당하는 유저가 없습니다."));
                 member.authorizeUser();
                 memberRepository.save(member);
                 log.info("회원가입");
+                //회원 가입으로 redirect 해야됨 원래
+                loginSuccess(response, oAuth2User);
+                log.info("로그인");
             } else {
                 // 로그인에 성공한 경우 access, refresh 토큰 생성
                 loginSuccess(response, oAuth2User);
@@ -64,11 +70,11 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String email = oAuth2User.getAttribute("email");
 
         String accessToken = jwtService.createAccessToken(email);
-        String refreshToken = jwtService.createRefreshToken();
-        response.addHeader(jwtService.getAccessHeader(), "Bearer " + accessToken);
-        response.addHeader(jwtService.getRefreshHeader(), "Bearer " + refreshToken);
-
-        jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
-        jwtService.updateRefreshToken(email, refreshToken);
+        String refreshToken = jwtService.getRefreshToken(email);
+        if (!jwtService.isTokenValid(refreshToken)) {
+            refreshToken = jwtService.createRefreshToken();
+            jwtService.updateRefreshToken(email, refreshToken);
+        }
+        jwtService.sendAccessAndRefreshToken(response,accessToken,refreshToken);
     }
 }

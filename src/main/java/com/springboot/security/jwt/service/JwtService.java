@@ -2,7 +2,12 @@ package com.springboot.security.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
+import com.springboot.security.jwt.dto.StatusResponseDto;
+import com.springboot.security.jwt.dto.TokenResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -10,7 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.Optional;
 
@@ -46,6 +55,8 @@ public class JwtService {
 
     private final MemberRepository userRepository;
 
+    private final ObjectMapper objectMapper;
+
     /**
      * AccessToken 생성 메소드
      */
@@ -72,27 +83,6 @@ public class JwtService {
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
                 .sign(Algorithm.HMAC512(secretKey));
-    }
-
-    /**
-     * AccessToken 헤더에 실어서 보내기
-     */
-    public void sendAccessToken(HttpServletResponse response, String accessToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        response.setHeader(accessHeader, accessToken);
-        log.info("재발급된 Access Token : {}", accessToken);
-    }
-
-    /**
-     * AccessToken + RefreshToken 헤더에 실어서 보내기
-     */
-    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
-        log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
     /**
@@ -139,28 +129,21 @@ public class JwtService {
     }
 
     /**
-     * AccessToken 헤더 설정
-     */
-    public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
-        response.setHeader(accessHeader, accessToken);
-    }
-
-    /**
-     * RefreshToken 헤더 설정
-     */
-    public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
-        response.setHeader(refreshHeader, refreshToken);
-    }
-
-    /**
      * RefreshToken DB 저장(업데이트)
      */
+    @Transactional
     public void updateRefreshToken(String email, String refreshToken) {
         userRepository.findByEmail(email)
                 .ifPresentOrElse(
                         user -> user.updateRefreshToken(refreshToken),
                         () -> new Exception("일치하는 회원이 없습니다.")
                 );
+    }
+
+    public String getRefreshToken(String email) {
+        return userRepository.findByEmail(email)
+                .map(Member::getRefreshToken)
+                .orElse(null); // 사용자를 찾지 못하면 null을 반환
     }
 
     public boolean isTokenValid(String token) {
@@ -171,5 +154,17 @@ public class JwtService {
             log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
             return false;
         }
+    }
+
+    public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) throws IOException {
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        response.sendRedirect(UriComponentsBuilder.fromUriString("http://localhost:3000")
+                .queryParam("accessToken", accessToken)
+                .queryParam("refreshToken", refreshToken)
+                .build()
+                .encode(StandardCharsets.UTF_8)
+                .toUriString());
+
     }
 }

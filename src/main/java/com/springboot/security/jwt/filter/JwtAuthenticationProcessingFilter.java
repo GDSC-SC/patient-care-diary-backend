@@ -1,7 +1,11 @@
 package com.springboot.security.jwt.filter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
+import com.springboot.security.jwt.dto.StatusResponseDto;
+import com.springboot.security.jwt.dto.TokenResponseDto;
 import com.springboot.security.jwt.service.JwtService;
 import com.springboot.security.jwt.dto.SecurityUserDto;
 import jakarta.servlet.FilterChain;
@@ -21,6 +25,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -29,8 +34,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final MemberRepository userRepository;
-
-    private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -66,13 +69,15 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      *  reIssueRefreshToken()로 리프레시 토큰 재발급 & DB에 리프레시 토큰 업데이트 메소드 호출
      *  그 후 JwtService.sendAccessTokenAndRefreshToken()으로 응답 헤더에 보내기
      */
-    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        userRepository.findByRefreshToken(refreshToken)
-                .ifPresent(user -> {
-                    String reIssuedRefreshToken = reIssueRefreshToken(user);
-                    jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()),
-                            reIssuedRefreshToken);
-                });
+    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) throws IOException {
+
+        String reIssuedRefreshToken = null;
+        Optional<Member> optionalUser = userRepository.findByRefreshToken(refreshToken);
+        if (optionalUser.isPresent()) {
+            Member user = optionalUser.get();
+            reIssuedRefreshToken = reIssueRefreshToken(user);
+            jwtService.sendAccessAndRefreshToken(response, jwtService.createAccessToken(user.getEmail()), reIssuedRefreshToken);
+        }
     }
 
     /**
@@ -136,5 +141,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         return new UsernamePasswordAuthenticationToken(member, "",
                 List.of(new SimpleGrantedAuthority(member.getRole().toString())));
     }
+
 }
 
