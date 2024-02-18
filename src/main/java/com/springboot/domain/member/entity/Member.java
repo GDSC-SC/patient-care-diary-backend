@@ -2,6 +2,7 @@ package com.springboot.domain.member.entity;
 
 import com.springboot.domain.category.entity.Category;
 import com.springboot.domain.diary.entity.Diary;
+import com.springboot.domain.member.dto.MemberRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -73,5 +74,11 @@ public class Member {
 
     public void authorizeUser() {
         this.role = Role.USER;
+    }
+
+    public void signUp(MemberRequestDto requestDto) {
+        this.gender = requestDto.getGender();
+        this.illness = requestDto.getIllness();
+        this.type = requestDto.getType();
     }
 }
