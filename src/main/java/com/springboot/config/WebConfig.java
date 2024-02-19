@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "https://patient-care-diary.fly.dev") //로컬
+                .allowedOrigins("http://localhost:3000", "https://patient-care-diary.fly.dev", "https://patient-care-diary.dev", "https://patient-care-diary.dev:8000") //로컬
                 .allowedMethods("OPTIONS", "GET", "POST", "PUT", "DELETE") // 허용할 HTTP 메서드
                 .allowCredentials(true) // 쿠키 허용
                 .allowedHeaders("*")

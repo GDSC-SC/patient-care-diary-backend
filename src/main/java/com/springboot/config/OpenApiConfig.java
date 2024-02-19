@@ -33,11 +33,11 @@ public class OpenApiConfig {
                         .scheme("bearer")
                         .bearerFormat("JWT")); // 토큰 형식을 지정하는 임의의 문자(Optional)
 
-//        Server server = new Server().url("https://patient-care-diary.fly.dev");
+        Server server = new Server().url("https://patient-care-diary.dev");
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .components(components);
-//                .servers(List.of(server));
+                .components(components)
+                .servers(List.of(server));
     }
 }
