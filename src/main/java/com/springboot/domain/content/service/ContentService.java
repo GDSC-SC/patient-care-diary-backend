@@ -19,7 +19,6 @@ import com.springboot.global.exception.DuplicateRequestException;
 import com.springboot.global.exception.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -43,7 +42,7 @@ public class ContentService {
     private String keyFileName;
 
     @Transactional
-    public long save(ContentRequestDto requestDto) {
+    public long save(ContentRequestDto requestDto, MultipartFile image) throws IOException {
         Diary diary = diaryRepository.findById(requestDto.getDiaryId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + requestDto.getDiaryId()));
 
@@ -54,10 +53,16 @@ public class ContentService {
             throw new DuplicateRequestException(ErrorCode.CONTENT_DUPLICATE_REQUEST, "해당 다이어리 id=" + requestDto.getDiaryId() + " 해당 카테고리 id=" + requestDto.getCategoryId() + "의 콘텐츠는 중복된 요청입니다.");
         }
 
+        String photoUrl = "";
+        if (!image.isEmpty()){
+            photoUrl = uploadImage(image);
+        }
+
         Content content = Content.builder()
                 .diary(diary)
                 .category(category)
                 .done(requestDto.getDone())
+                .photoUrl(photoUrl)
                 .text(requestDto.getText())
                 .build();
         return contentRepository.save(content).getId();
@@ -70,18 +75,23 @@ public class ContentService {
     }
 
     @Transactional
-    public long update(ContentUpdateRequestDto requestDto, Long id) throws IOException {
+    public long update(ContentUpdateRequestDto requestDto, MultipartFile image, Long id) throws IOException {
         Content content = contentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTENT_NOT_FOUND, "해당 컨텐츠가 없습니다. id=" + id));
-        //String photoUrl = uploadImage(requestDto.getImage());
+        String photoUrl = content.getPhotoUrl();
+        if (!image.isEmpty()) {
+            deleteImage(photoUrl);
+            photoUrl = uploadImage(image);
+        }
         content.update(requestDto.getDone(), content.getPhotoUrl(), requestDto.getText());
         return id;
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws IOException {
         Content content = contentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CONTENT_NOT_FOUND, "해당 컨텐츠가 없습니다. id=" + id));
+        deleteImage(content.getPhotoUrl());
         contentRepository.delete(content);
     }
 
@@ -116,4 +126,24 @@ public class ContentService {
         }
         return imgUrl;
     }
+
+    public void deleteImage(String photoUrl) throws IOException  {
+        InputStream keyFile = ResourceUtils.getURL(keyFileName).openStream();
+        Storage storage = StorageOptions.newBuilder()
+                .setCredentials(GoogleCredentials.fromStream(keyFile))
+                .build()
+                .getService();
+
+       String objectName = photoUrl.split("/")[photoUrl.split("/").length - 1];
+        Blob blob = storage.get(bucketName, objectName);
+        if (blob == null) {
+            System.out.println("The object " + photoUrl + " wasn't found in " + bucketName);
+            return;
+        }
+        Storage.BlobSourceOption precondition =
+                Storage.BlobSourceOption.generationMatch(blob.getGeneration());
+
+        storage.delete(bucketName, objectName, precondition);
+    }
 }
+
