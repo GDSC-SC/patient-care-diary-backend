@@ -1,12 +1,12 @@
 spring:
+  profiles:
+    include: oauth, jwt
   datasource:
     driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://patient-care-diary-db.internal:5432/patient_care_diary?user=postgres&password=FuyPYI34P0GjXGZ
     url: jdbc:postgresql://localhost:5432/pcd-db?characterEncoding=utf8
     username: postgres
     password: 1234
-  profiles:
-    include: oauth, jwt
   cloud:
     gcp:
       storage:
@@ -21,7 +21,5 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
-    hibernate:
-      ddl-auto: create
 springdoc:
   packages-to-scan=: com.springboot.domain
