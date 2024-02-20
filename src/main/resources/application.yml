@@ -3,7 +3,7 @@ spring:
     include: oauth, jwt
   datasource:
     driver-class-name: org.postgresql.Driver
-    #url: jdbc:postgresql://patient-care-diary-db.internal:5432/patient_care_diary?user=postgres&password=FuyPYI34P0GjXGZ
+    #url: jdbc:postgresql://patient-care-diary-db.internal:5432/patient_care_diary?user=postgres&password=GJR375F2OUaMxyQ
     url: jdbc:postgresql://localhost:5432/pcd-db?characterEncoding=utf8
     username: postgres
     password: 1234
@@ -21,5 +21,7 @@ spring:
         show_sql: true
         format_sql: true
         use_sql_comments: true
+    hibernate:
+      ddl-auto: create
 springdoc:
   packages-to-scan=: com.springboot.domain
