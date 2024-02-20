@@ -11,7 +11,7 @@ spring:
     gcp:
       storage:
         credentials:
-          location: classpath:patient-care-diary-5fe08c6658e1.json
+          location: classpath:patient-care-diary-26e9927ce95c.json
         project-id: patient-care-diary
         bucket: patient-care-diary-bucket
   jpa:
