@@ -11,19 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContentResponseDto {
 
+    private String categoryCode;
     private String category;
     private String midCategory;
     private String color;
 
     private Boolean done;
-
     private String photoUrl;
-
     private String text;
 
     @Builder
     public ContentResponseDto(Content entity) {
-        this.category = entity.getCategory().getCategoryCode().getKorName();
+        this.categoryCode = entity.getCategory().getCategoryCode().getCode();
+        this.category = entity.getCategory().getCategoryCode().getEngName();
         this.midCategory = entity.getCategory().getMidCategory();
         this.color = entity.getCategory().getColor();
         this.done = entity.getDone();

@@ -17,8 +17,8 @@ public class DiaryEmojiController {
     public long save(@RequestBody DiaryEmojiRequestDto requestDto) {
         return diaryEmojiService.save(requestDto);
     }
-    @DeleteMapping("/{diaryId}")
-    public void delete(@PathVariable Long diaryId) {
-        diaryEmojiService.delete(diaryId);
+    @DeleteMapping("/{diaryId}/{emojiCode}")
+    public void delete(@PathVariable Long diaryId, @PathVariable String emojiCode) {
+        diaryEmojiService.delete(diaryId, emojiCode);
     }
 }

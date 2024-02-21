@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryResponseDto {
     private long id;
-
     private String categoryCode;
     private String category;
     private String midCategory;

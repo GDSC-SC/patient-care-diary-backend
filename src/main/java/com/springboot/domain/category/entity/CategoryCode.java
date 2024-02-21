@@ -8,11 +8,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum CategoryCode {
 
-    FOOD("C001", "음식", "food"),
-    MEDICINE("C002", "약", "medicine"),
-    DIARY("C003", "오늘의 일기", "today diary"),
-    EXERCISE("C004", "운동", "exercise"),
-    ILLNESS("C005", "질병", "about illness");
+    FOOD("C001", "음식", "Food"),
+    MEDICINE("C002", "약", "Medicine"),
+    DIARY("C003", "오늘의 일기", "Today Diary"),
+    EXERCISE("C004", "운동", "Exercise"),
+    ILLNESS("C005", "질병", "About Illness");
 
     private final String code;
     private final String korName;

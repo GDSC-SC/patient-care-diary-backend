@@ -9,7 +9,8 @@ public enum Emoji {
 
     GOOD("E001"),
     LOVE("E002"),
-    CHECK("E003");
+    CHECK("E003"),
+    NONE("none");
 
     private final String code;
     public static Emoji findByCode(String code) {

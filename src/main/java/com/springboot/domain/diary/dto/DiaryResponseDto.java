@@ -3,6 +3,7 @@ package com.springboot.domain.diary.dto;
 import com.springboot.domain.content.dto.ContentResponseDto;
 import com.springboot.domain.diary.entity.Diary;
 import com.springboot.domain.diaryemoji.dto.DiaryEmojiResponseDto;
+import com.springboot.domain.diaryemoji.entity.Emoji;
 import com.springboot.domain.member.dto.MemberResponseDto;
 import com.springboot.domain.member.entity.Member;
 import lombok.Builder;
@@ -25,6 +26,9 @@ public class DiaryResponseDto {
 
     //컨텐츠를 다 보여주는 방향
     private List<ContentResponseDto> contents;
+
+    @Setter
+    private Emoji myEmojiState;
     @Builder
     public DiaryResponseDto(Diary entity) {
         this.id = entity.getId();

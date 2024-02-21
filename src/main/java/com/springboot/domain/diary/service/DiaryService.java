@@ -18,6 +18,7 @@ import com.springboot.global.exception.EntityNotFoundException;
 import com.springboot.security.jwt.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -56,6 +57,7 @@ public class DiaryService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + id));
         DiaryResponseDto responseDto = new DiaryResponseDto(diary);
         responseDto.setDiaryEmojis(countEmoji(diary));
+        responseDto.setMyEmojiState(findMyEmojiState(diary));
         return responseDto;
     }
 
@@ -77,6 +79,7 @@ public class DiaryService {
                 .map(diary -> {
                     DiaryListResponseDto dto = new DiaryListResponseDto(diary);
                     dto.setDiaryEmojis(countEmoji(diary));
+                    dto.setMyEmojiState(findMyEmojiState(diary));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -87,9 +90,27 @@ public class DiaryService {
                 .map(diary -> {
                     DiaryListResponseDto dto = new DiaryListResponseDto(diary);
                     dto.setDiaryEmojis(countEmoji(diary));
+                    dto.setMyEmojiState(findMyEmojiState(diary));
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public DiaryResponseDto findByMemberAndDate(String dateString) {
+        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDto.getEmail();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate date = LocalDate.parse(dateString, formatter);
+
+        Diary diary = diaryRepository.findByMemberAndDate(member, date)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 멤버 email=" + email + " 의 해당 날짜=" + dateString +" 의 다이어리가 없습니다."));
+        DiaryResponseDto responseDto = new DiaryResponseDto(diary);
+        responseDto.setDiaryEmojis(countEmoji(diary));
+        responseDto.setMyEmojiState(findMyEmojiState(diary));
+        return responseDto;
     }
 
     private List<DiaryEmojiResponseDto> countEmoji(Diary diary) {
@@ -115,19 +136,13 @@ public class DiaryService {
         return responseDtoList;
     }
 
-    public DiaryResponseDto findByMemberAndDate(String dateString) {
+    private Emoji findMyEmojiState(Diary diary) {
         SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDto.getEmail();
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate date = LocalDate.parse(dateString, formatter);
-
-        Diary diary = diaryRepository.findByMemberAndDate(member, date)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 멤버 email=" + email + " 의 해당 날짜=" + dateString +" 의 다이어리가 없습니다."));
-        DiaryResponseDto responseDto = new DiaryResponseDto(diary);
-        responseDto.setDiaryEmojis(countEmoji(diary));
-        return responseDto;
+        Optional<DiaryEmoji> diaryEmojiOptional = diaryEmojiRepository.findByMemberAndDiary(member, diary);
+        return diaryEmojiOptional.map(DiaryEmoji::getEmoji).orElse(Emoji.NONE);
     }
 }

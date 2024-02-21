@@ -54,7 +54,7 @@ public class DiaryEmojiService {
         return diaryEmojiRepository.save(diaryEmoji).getId();
     }
     @Transactional
-    public void delete(Long diaryId) {
+    public void delete(Long diaryId, String emojiCode) {
 
         SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDto.getEmail();
@@ -66,6 +66,10 @@ public class DiaryEmojiService {
 
         DiaryEmoji diaryEmoji = diaryEmojiRepository.findByMemberAndDiary(member, diary)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.EMOJI_NOT_FOUND, "사용자 email " + email + "가 해당 다이어리 " + diaryId + "에 누른 이모지가 없습니다."));
+
+        if (diaryEmoji.getEmoji().getCode().equals(emojiCode)) {
+            throw new InvalidInputException(ErrorCode.EMOJI_CODE_NOT_FOUND, "사용자 email " + email + "가 해당 이모지 code=" + emojiCode + "를 누른 적이 없습니다.");
+        }
         diaryEmojiRepository.delete(diaryEmoji);
     }
 }
