@@ -3,6 +3,7 @@ package com.springboot.domain.diary.dto;
 import com.springboot.domain.content.dto.ContentResponseDto;
 import com.springboot.domain.diary.entity.Diary;
 import com.springboot.domain.diaryemoji.dto.DiaryEmojiResponseDto;
+import com.springboot.domain.member.dto.MemberResponseDto;
 import com.springboot.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class DiaryResponseDto {
     private Long id;
-    private String name;
+    private MemberResponseDto member;
     private LocalDate date;
     @Setter
     private List<DiaryEmojiResponseDto> diaryEmojis;
@@ -27,7 +28,7 @@ public class DiaryResponseDto {
     @Builder
     public DiaryResponseDto(Diary entity) {
         this.id = entity.getId();
-        this.name = entity.getMember().getName();
+        this.member = new MemberResponseDto(entity.getMember());
         this.date = entity.getDate();
         this.contents = entity.getContents().stream()
                 .map(ContentResponseDto::new)
