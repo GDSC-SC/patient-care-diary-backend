@@ -1,17 +1,17 @@
 spring:
+  profiles:
+    include: oauth, jwt
   datasource:
     driver-class-name: org.postgresql.Driver
-    #url: jdbc:postgresql://patient-care-diary-db.internal:5432/patient_care_diary?user=postgres&password=FuyPYI34P0GjXGZ
+    #url: jdbc:postgresql://patient-care-diary-db.internal:5432/patient_care_diary?user=postgres&password=GJR375F2OUaMxyQ
     url: jdbc:postgresql://localhost:5432/pcd-db?characterEncoding=utf8
     username: postgres
     password: 1234
-  profiles:
-    include: oauth, jwt
   cloud:
     gcp:
       storage:
         credentials:
-          location: classpath:patient-care-diary-5fe08c6658e1.json
+          location: classpath:patient-care-diary-26e9927ce95c.json
         project-id: patient-care-diary
         bucket: patient-care-diary-bucket
   jpa:

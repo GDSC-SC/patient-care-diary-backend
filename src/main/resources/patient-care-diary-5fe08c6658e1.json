@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "patient-care-diary",
+  "private_key_id": "5fe08c6658e1b8eef786dc2a946535be3e632cb5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDrRqq0NCvs7wdC\n+xLeRJ/YrgoVP4pWLCXromQ85UPy/ORTfoocS0b07VVi1nFPSP+iaISl0GZex7jk\nWSGq+fqzBqKvV6pRsqIcK8aDaC6+DbLp8Ea07V6I13VXl4wPNEYgUW3NrWL8j89/\nubFHafTUr7RnxK4r6RIMiBdyqbxKmeGr7dJ7G7NRk9g3u5PPin+RskXhhKYxEJTj\nEInEmCq55GpQOfl3fkTm4XdGBdJKOPknIVfxadcq5jDfzA3UH/xPxQFZ6WXYpqxb\nLtUYM0mtXMs1jUl5nTmW0k7WNrR6LbStdQebVfzD/d1LyKQPXEBWtHVcBBpTcXG6\nIXK/jH8NAgMBAAECggEAJoYkr2sXgi1FaB9KYKCl98nPltkXorKJ5wJpHVuA+8mS\n7WT74lQlIze1UoDAfvX5/bLVfX0ZNg3H5YP+sktKVIQSoVleZxAz4R7920h01uPR\nVuLkAP4ZC5kT+qqy4U5y6RnMO/BXE/nMRSK3t3TPBQBcLt2Sk1gPf4PNKxZF4YTu\ngSQ0oKaqnk2FEM3EYWGkVVi4vLYu+G3qP9rgYnI1RHdrCc9TK8ITy2LrCZlb3JUl\nFEZg0zIYXkX05aQjpMVek3aBYjT0FtuU6zJyBPvHaMBX0LLplXP/WAHxbQWjPzrA\n4fHMlnViAbXwOYo7wA9qixjdjjmPGmBb3aYpmp9fdQKBgQD4jkfT/4VKdmbPg+CH\neMfmPWf+RLeyHS2pGLI21PwCQ1v9ax3QAFLQl/TdSPTemYA0O9ujao0rCVVyS9cn\nvHhpj+os/yW3PCcGoL+jDn1RusPVQy3oHU6lr5kShPJJ6ClDng/eXYWuTJUX+WVl\nxZ1ri+XHF9x7dEVaXMksFkO3gwKBgQDyUpF1n6amMOM8/MmtMnl2f+XX7oJ7ck/I\nwFiLifHnXhBkqL7QPdyGbYnZ1sqjDtubcnQ45AWkzGpIyTn6tMtlmANdXfoXP66s\nUV0DDhTPpFr4EaeJz9QIoY6PAOsXsoiBpbhbyVMxpWGdkO1vVEkuq3l5lvsAd/vG\n37fEGhOaLwKBgQC8ujwr6p7o1VJnSvlXpAwU9Jdb6A2bPrCG7uuS2tGnXkIhAA6Y\n+0XmgRs6UsUrqF5CSxkQ0jzyapnouVFbKK49aTskg2+92/y9+ZzJUJ0zS56a9fGL\nh4VKJTUTbMMT/yYl44SlEVoJ6LhkhcfKKOzI1mbYb3PIgZaPcFiIEzfDxQKBgHw6\ndDP2+vpsSbL0bXgLTlW/z9dZgS9ENT7XzQ0MVSWmBYV1NQ2RCUMpWOiCwzPA5DjW\n/lpEG9iWq05RSxYKJdQZkHAHQ7Uzgpr4w1RTnbutqK1Qb7GpCCy8llcdw2hMsMq2\naMM1fR8Qh/C9YdwXO8VfR1FcY6Wj3UHhY1Z3f+ElAoGAbfVW+DJh0tMAkpK6Yydj\n+cbYjN1ARkNZyFX9qVOwW0xR4HY2N/lSNqh2mfmY2E+91P/laS5PuBnFQl1pdhyo\n1XE5Iw1dXqiEXeWqfh1nocEa7vKoVe9QcpqpqTctJAg/lHC2GVnIvp2WrQrFOt02\nyewwMFZ0MNU8D/LxC5JNptM=\n-----END PRIVATE KEY-----\n",
+  "client_email": "springboot-storage-access@patient-care-diary.iam.gserviceaccount.com",
+  "client_id": "113590169575333450708",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/springboot-storage-access%40patient-care-diary.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
