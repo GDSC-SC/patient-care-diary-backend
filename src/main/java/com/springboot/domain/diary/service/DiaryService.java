@@ -79,12 +79,11 @@ public class DiaryService {
 
     public List<DiaryListResponseDto> findAll() {
         return diaryRepository.findAll().stream()
-                .map(diary -> {
-                    DiaryListResponseDto dto = new DiaryListResponseDto(diary);
-                    return dto;
-                })
+                .map(DiaryListResponseDto::new) // Lambda 표현식으로 변경
+                .sorted(Comparator.comparing(DiaryListResponseDto::getDate).reversed()) // 날짜 기준으로 최신순 정렬
                 .collect(Collectors.toList());
     }
+
 
     public DiaryResponseDto findByMemberAndDate(String dateString) {
         SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
