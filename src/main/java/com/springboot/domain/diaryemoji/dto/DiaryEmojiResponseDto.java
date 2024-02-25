@@ -2,20 +2,22 @@ package com.springboot.domain.diaryemoji.dto;
 
 import com.springboot.domain.diaryemoji.entity.DiaryEmoji;
 import com.springboot.domain.diaryemoji.entity.Emoji;
+import com.springboot.domain.diaryemoji.entity.EmojiCount;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
 public class DiaryEmojiResponseDto {
 
-    private Emoji emoji;
-
-    private int count;
+    List<EmojiCount> emojiCounts;
+    Emoji myEmojiState;
     @Builder
-    public DiaryEmojiResponseDto(Emoji emoji, int count) {
-        this.emoji = emoji;
-        this.count = count;
+    public DiaryEmojiResponseDto(List<EmojiCount> emojiCounts, Emoji myEmojiState) {
+        this.emojiCounts = emojiCounts;
+        this.myEmojiState = myEmojiState;
     }
 }

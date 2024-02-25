@@ -12,7 +12,8 @@ public enum CategoryCode {
     MEDICINE("C002", "약", "Medicine"),
     DIARY("C003", "오늘의 일기", "Today Diary"),
     EXERCISE("C004", "운동", "Exercise"),
-    ILLNESS("C005", "질병", "About Illness");
+    ILLNESS("C005", "질병", "About Illness"),
+    MEMO("C006", "메모", "Memo");
 
     private final String code;
     private final String korName;

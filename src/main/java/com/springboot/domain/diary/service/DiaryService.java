@@ -6,10 +6,7 @@ import com.springboot.domain.diary.dto.DiaryRequestDto;
 import com.springboot.domain.diary.dto.DiaryResponseDto;
 import com.springboot.domain.diary.entity.Diary;
 import com.springboot.domain.diary.entity.DiaryRepository;
-import com.springboot.domain.diaryemoji.dto.DiaryEmojiResponseDto;
-import com.springboot.domain.diaryemoji.entity.DiaryEmoji;
 import com.springboot.domain.diaryemoji.entity.DiaryEmojiRepository;
-import com.springboot.domain.diaryemoji.entity.Emoji;
 import com.springboot.domain.member.entity.Member;
 import com.springboot.domain.member.entity.MemberRepository;
 import com.springboot.global.error.ErrorCode;
@@ -18,7 +15,6 @@ import com.springboot.global.exception.EntityNotFoundException;
 import com.springboot.security.jwt.dto.SecurityUserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -56,8 +52,6 @@ public class DiaryService {
         Diary diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 다이어리가 없습니다. id=" + id));
         DiaryResponseDto responseDto = new DiaryResponseDto(diary);
-        responseDto.setDiaryEmojis(countEmoji(diary));
-        responseDto.setMyEmojiState(findMyEmojiState(diary));
         return responseDto;
     }
 
@@ -78,8 +72,6 @@ public class DiaryService {
         return diaries.stream()
                 .map(diary -> {
                     DiaryListResponseDto dto = new DiaryListResponseDto(diary);
-                    dto.setDiaryEmojis(countEmoji(diary));
-                    dto.setMyEmojiState(findMyEmojiState(diary));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -89,8 +81,6 @@ public class DiaryService {
         return diaryRepository.findAll().stream()
                 .map(diary -> {
                     DiaryListResponseDto dto = new DiaryListResponseDto(diary);
-                    dto.setDiaryEmojis(countEmoji(diary));
-                    dto.setMyEmojiState(findMyEmojiState(diary));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -108,41 +98,7 @@ public class DiaryService {
         Diary diary = diaryRepository.findByMemberAndDate(member, date)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.DIARY_NOT_FOUND, "해당 멤버 email=" + email + " 의 해당 날짜=" + dateString +" 의 다이어리가 없습니다."));
         DiaryResponseDto responseDto = new DiaryResponseDto(diary);
-        responseDto.setDiaryEmojis(countEmoji(diary));
-        responseDto.setMyEmojiState(findMyEmojiState(diary));
         return responseDto;
     }
 
-    private List<DiaryEmojiResponseDto> countEmoji(Diary diary) {
-        List<DiaryEmoji> diaryEmojis = diary.getDiaryEmojis();
-        Map<Emoji, Integer> emojiCountMap = new HashMap<>();
-
-        for (DiaryEmoji diaryEmoji : diaryEmojis) {
-            Emoji emoji = diaryEmoji.getEmoji();
-            System.out.println(emoji);
-            emojiCountMap.put(emoji, emojiCountMap.getOrDefault(emoji, 0) + 1);
-        }
-
-        List<DiaryEmojiResponseDto> responseDtoList = new ArrayList<>();
-        for (Map.Entry<Emoji, Integer> entry : emojiCountMap.entrySet()) {
-            Emoji emoji = entry.getKey();
-            Integer count = entry.getValue();
-            DiaryEmojiResponseDto responseDto = DiaryEmojiResponseDto.builder()
-                    .emoji(emoji)
-                    .count(count)
-                    .build();
-            responseDtoList.add(responseDto);
-        }
-        return responseDtoList;
-    }
-
-    private Emoji findMyEmojiState(Diary diary) {
-        SecurityUserDto userDto = (SecurityUserDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDto.getEmail();
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.MEMBER_NOT_FOUND,"잘못된 접근입니다. 해당 유저가 없습니다. email=" + email));
-
-        Optional<DiaryEmoji> diaryEmojiOptional = diaryEmojiRepository.findByMemberAndDiary(member, diary);
-        return diaryEmojiOptional.map(DiaryEmoji::getEmoji).orElse(Emoji.NONE);
-    }
 }

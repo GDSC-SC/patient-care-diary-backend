@@ -21,14 +21,10 @@ public class DiaryResponseDto {
     private Long id;
     private MemberResponseDto member;
     private LocalDate date;
-    @Setter
-    private List<DiaryEmojiResponseDto> diaryEmojis;
 
     //컨텐츠를 다 보여주는 방향
     private List<ContentResponseDto> contents;
 
-    @Setter
-    private Emoji myEmojiState;
     @Builder
     public DiaryResponseDto(Diary entity) {
         this.id = entity.getId();

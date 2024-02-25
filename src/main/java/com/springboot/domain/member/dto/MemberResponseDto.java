@@ -21,6 +21,7 @@ public class MemberResponseDto {
     private String illness;
 
     private String type;
+    private String description;
 
     @Builder
     public MemberResponseDto(Member entity){
@@ -30,5 +31,6 @@ public class MemberResponseDto {
         this.gender = entity.getGender();
         this.illness = entity.getIllness();
         this.type = entity.getType();
+        this.description = entity.getDescription();
     }
 }

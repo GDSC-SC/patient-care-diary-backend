@@ -44,6 +44,9 @@ public class Member {
     @Column
     private String type;
 
+    @Column
+    private String description;
+
     @OneToMany(mappedBy = "member")
     private List<Diary> diaries = new ArrayList<>();
 
@@ -58,9 +61,10 @@ public class Member {
         this.role = role;
     }
 
-    public Member update(String name, String picture) {
+    public Member update(String name, String picture, String description) {
         this.name = name;
         this.picture = picture;
+        this.description = description;
         return this;
     }
 
@@ -80,5 +84,6 @@ public class Member {
         this.gender = requestDto.getGender();
         this.illness = requestDto.getIllness();
         this.type = requestDto.getType();
+        this.description = requestDto.getDescription();
     }
 }

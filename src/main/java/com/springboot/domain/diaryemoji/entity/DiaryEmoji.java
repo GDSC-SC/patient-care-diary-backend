@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class DiaryEmoji {
     @JoinColumn(name = "DIARY_ID")
     private Diary diary;
 
+    @Setter
     @Column(nullable = false)
     private Emoji emoji;
 

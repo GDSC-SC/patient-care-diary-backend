@@ -12,4 +12,5 @@ public class MemberRequestDto {
     private String illness;
 
     private String type;
+    private String description;
 }

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContentResponseDto {
 
+    private Long id;
     private String categoryCode;
     private String category;
     private String midCategory;
@@ -22,6 +23,7 @@ public class ContentResponseDto {
 
     @Builder
     public ContentResponseDto(Content entity) {
+        this.id = entity.getId();
         this.categoryCode = entity.getCategory().getCategoryCode().getCode();
         this.category = entity.getCategory().getCategoryCode().getEngName();
         this.midCategory = entity.getCategory().getMidCategory();
