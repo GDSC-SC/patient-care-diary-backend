@@ -1,6 +1,6 @@
-# My Spring Project
+# Patient-Care-Diary
 
-This repository contains the source code for My Spring Project.
+This repository contains the source code for Spring Code for Patient-Care-Diary Project.
 
 ## Getting Started
 
