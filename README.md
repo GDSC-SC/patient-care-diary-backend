@@ -53,7 +53,3 @@ Before you begin, ensure you have met the following requirements:
 
 
 Access the application at http://localhost:8080 in your web browser.
-
-
-This is a actual url for our project:
-https://patient-care-diary.dev
