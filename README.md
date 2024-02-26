@@ -1,6 +1,14 @@
-# Patient-Care-Diary
+# Patient Care Diary Backend
 
-This repository contains the source code for Spring Code for Patient-Care-Diary Project.
+_**We will help all patients and their families live with hope.**_
+
+Our project “Patient Care Diary” serves as a supportive platform where individuals, especially patients, can record their daily health experiences and activities which fosters a sense of community and empowerment among users.
+
+This repository contains Spring code of patient-care-diary project.
+
+## Links
+- [Actual URL patient-care-diary.dev](https://patient-care-diary.dev/)
+- [Demo Video](https://www.youtube.com/watch?v=AU7WVoznX3g)
 
 ## Getting Started
 
